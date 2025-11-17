@@ -14,10 +14,11 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --upgrade pip && \
     pip install runpod \
     spleeter==2.4.0 \
-    pydub
+    pydub \
+    boto3
 
 # ---------------------------
-# Pre-download Spleeter models (避免运行时下载)
+# Pre-download Spleeter models
 # ---------------------------
 RUN python3 -c "from spleeter.separator import Separator; Separator('spleeter:2stems', multiprocess=False)" && \
     python3 -c "from spleeter.separator import Separator; Separator('spleeter:4stems', multiprocess=False)" && \
