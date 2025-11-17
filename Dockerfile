@@ -12,16 +12,12 @@ RUN apt-get update && apt-get install -y \
 # Install Python Dependencies
 # ---------------------------
 RUN pip install --upgrade pip && \
-    pip install runpod && \
-    pip install spleeter==2.4.0 && \
-    pip install tensorflow==2.5.0
+    pip install runpod demucs
 
 # ---------------------------
-# Pre-download models (重要：避免运行时下载)
+# Pre-download default model
 # ---------------------------
-RUN python3 -c "from spleeter.separator import Separator; Separator('spleeter:2stems')" || true
-RUN python3 -c "from spleeter.separator import Separator; Separator('spleeter:4stems')" || true
-RUN python3 -c "from spleeter.separator import Separator; Separator('spleeter:5stems')" || true
+RUN python3 -c "import demucs.pretrained; demucs.pretrained.get_model('htdemucs')"
 
 # ---------------------------
 # Set working directory
