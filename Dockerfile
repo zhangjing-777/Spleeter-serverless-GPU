@@ -1,4 +1,4 @@
-FROM runpod/pytorch:2.1.0-py3.10-cuda11.8.0-devel-ubuntu22.04
+FROM python:3.9-slim
 
 # ---------------------------
 # Install system dependencies
@@ -12,12 +12,18 @@ RUN apt-get update && apt-get install -y \
 # Install Python Dependencies
 # ---------------------------
 RUN pip install --upgrade pip && \
-    pip install runpod demucs
+    pip install runpod \
+    spleeter==2.4.0 \
+    pydub
 
 # ---------------------------
-# Pre-download default model
+# Pre-download models
 # ---------------------------
-RUN python3 -c "import demucs.pretrained; demucs.pretrained.get_model('htdemucs')"
+ENV MODEL_PATH=/models
+RUN mkdir -p $MODEL_PATH && \
+    python3 -c "from spleeter.separator import Separator; Separator('spleeter:2stems', multiprocess=False)" && \
+    python3 -c "from spleeter.separator import Separator; Separator('spleeter:4stems', multiprocess=False)" && \
+    python3 -c "from spleeter.separator import Separator; Separator('spleeter:5stems', multiprocess=False)"
 
 # ---------------------------
 # Set working directory
