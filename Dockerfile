@@ -17,15 +17,6 @@ RUN pip install --upgrade pip && \
     pydub
 
 # ---------------------------
-# Pre-download models
-# ---------------------------
-ENV MODEL_PATH=/models
-RUN mkdir -p $MODEL_PATH && \
-    python3 -c "from spleeter.separator import Separator; Separator('spleeter:2stems', multiprocess=False)" && \
-    python3 -c "from spleeter.separator import Separator; Separator('spleeter:4stems', multiprocess=False)" && \
-    python3 -c "from spleeter.separator import Separator; Separator('spleeter:5stems', multiprocess=False)"
-
-# ---------------------------
 # Set working directory
 # ---------------------------
 WORKDIR /app
