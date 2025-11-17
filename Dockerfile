@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 # ---------------------------
 # Install system dependencies
@@ -15,6 +15,13 @@ RUN pip install --upgrade pip && \
     pip install runpod \
     spleeter==2.4.0 \
     pydub
+
+# ---------------------------
+# Pre-download Spleeter models (避免运行时下载)
+# ---------------------------
+RUN python3 -c "from spleeter.separator import Separator; Separator('spleeter:2stems', multiprocess=False)" && \
+    python3 -c "from spleeter.separator import Separator; Separator('spleeter:4stems', multiprocess=False)" && \
+    python3 -c "from spleeter.separator import Separator; Separator('spleeter:5stems', multiprocess=False)"
 
 # ---------------------------
 # Set working directory
